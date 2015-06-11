@@ -2,29 +2,13 @@
 package com.github.eug.apriori;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
-    private static class Config {
-        public String file = "";
-        public int supportThreshold = 0;
-        public int threads = 40;
-    }
-
-    private static Config parse(String[] args) {
-        Config config = new Config();
-        for (int i = 0; i < args.length; i++) {
-            switch (args[i]) {
-                case "-f": config.file = args[i + 1]; break;
-                case "-s": config.supportThreshold = Integer.parseInt(args[i + 1]); break;
-                case "-t": config.threads = Integer.parseInt(args[i + 1]); break;
-            }
-        }
-        return config;
-    }
 
     private static ArrayList<Transaction> readFile(String file) 
             throws FileNotFoundException, IOException {
@@ -51,8 +35,14 @@ public class Main {
     public static void main(String[] args) 
             throws FileNotFoundException, IOException {
         
-        Config config = parse(args);
+        Config config = Config.parse(args);
+        
+        if (!new File(config.file).exists()) {
+            System.err.println("File not found.");
+            System.exit(1);
+        }
+        
         Apriori algo = new Apriori();
-        algo.run(readFile(config.file), config.supportThreshold, config.threads);
+        algo.run(readFile(config.file), config.support, config.threads);
     }
 }
