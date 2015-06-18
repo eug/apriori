@@ -38,7 +38,8 @@ public class Main {
         Config config = Config.parse(args);
         
         if (!new File(config.file).exists()) {
-            System.err.println("File not found.");
+            System.err.println("ERROR: File not found.");
+            Config.usage();
             System.exit(1);
         }
         
